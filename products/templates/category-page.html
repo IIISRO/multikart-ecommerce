@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+{% load discount_tag %}
+{% load static %}
+<title>{% block title%}{{cat.name}} | Multikart{% endblock %}</title>
+
+{% block content %}
+
+<style>
+.color-select ul li {
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  margin-right: 5px;
+  margin-bottom: 10px;
+  margin-top: 15px;
+  cursor: pointer;
+  border: 1px solid #444444;
+  }
+
+  .color-select ul li.active {
+  border: 1px solid black;
+  position: relative; }
+  .color-select ul li.active:after {
+    content: "";
+    background-image: url("data:image/svg+xml;charset=utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'><path fill='%23000' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/></svg>");
+    top: 10px;
+    right: 4px;
+    height: 15px;
+    width: 15px;
+    background-size: 70%;
+    background-repeat: no-repeat;
+    position: absolute; }
+</style>
+
+    <!-- breadcrumb start -->
+    <div class="breadcrumb-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="page-title">
+                        <h2>collection</h2>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <nav aria-label="breadcrumb" class="theme-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">collection</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- breadcrumb end -->
+
+
+
+    <!-- section start -->
+    <section class="section-b-space ratio_asos">
+        <div class="collection-wrapper">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-3 collection-filter">
+                        <!-- side-bar colleps block stat -->
+                        <div class="collection-filter-block">
+                            <!-- brand filter start -->
+                            <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left"
+                                        aria-hidden="true"></i> back</span></div>
+                            <div class="collection-collapse-block open">
+                                <h3 class="collapse-block-title">brand</h3>
+                                <div class="collection-collapse-block-content">
+                                    <div class="collection-brand-filter" id="vendors">
+                                        {% for vendor in vendors %}
+
+                                        <div style="display:flex;" class="collection-filter-checkbox">
+                                            <input name='vendor' style='width:17px; height:17px;' type="checkbox" class="query" value="{{vendor}}">
+                                            <label style="font-size:13px; margin-left:5px;" for="hundred">{{vendor}}</label>
+                                        </div>
+
+                                        {% endfor %}
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- color filter start here -->
+                            <div class="collection-collapse-block open">
+                                <h3 class="collapse-block-title">colors</h3>
+                                <div class="collection-collapse-block-content">
+                                    <div class="color-select">
+                                        <ul>
+                                            {% for color in colors %}
+                                            <li value='{{color}}' class="query {{color}}" name='color'></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- size filter start here -->
+                            <div class="collection-collapse-block border-0 open">
+                                <h3 class="collapse-block-title">size</h3>
+                                <div class="collection-collapse-block-content">
+                                    <div class="collection-brand-filter" id="sizes">
+                                        {% for size in sizes %}
+                                        <div style="display:flex;" class="collection-filter-checkbox">
+                                            <input name='size' style='width:17px; height:17px;' type="checkbox" class="query" value="{{size}}">
+                                            <label style="font-size:13px; margin-left:5px;" for="hundred">{{size}}</label>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- price filter start here -->
+                            <div class="collection-collapse-block border-0 open">
+                                <h3 class="collapse-block-title">price</h3>
+                                <div class="collection-collapse-block-content">
+                                    <div class="wrapper mt-3">
+                                        
+                           
+                                        <div class="range-slider">
+                                            <input id='price' type="text" class="js-range-slider" value="" />
+                                        </div>
+                       
+                               
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: center; padding: 5px;">
+
+                                <button id='reset' style="border: none; background-color: #ff4c3b;  color: white; width: 100%; border-radius: 1px;" >RESET FILTER</button>
+                            </div>
+                        </div>
+                        <!-- silde-bar colleps block end here -->
+                        <!-- side-bar single product slider start -->
+                        <div class="theme-card">
+                            <h5 class="title-border">new product</h5>
+                            <div class="offer-slider slide-1">
+                                <div>
+                                    {% for product in new_products %}
+                                    <div class="media">
+                                    <a href="{{product.get_absolute_url}}"><img class="img-fluid blur-up lazyload" src="{{product.main_img.url}}" alt=""></a>
+                                    <div class="media-body align-self-center">
+                                        <div class="rating">
+                                            {{product.get_stars|safe}}
+                                        </div>
+                                        <a href="{{product.get_absolute_url}}"><h6>{{ product.title }}</h6></a>
+                                        {% if product.discount_type == 'FAIZ' %}
+                                        <h4><del>${{product.price|floatformat:2}}</del><span style="font-size: 15px; color: orangered;">{{ product.discount_amount|floatformat:2 }}% off</span></h4>
+                                        <h4><span>$</span>{% discount product.discount_type product.price  product.discount_amount %}</h4>
+                                        {% elif product.discount_type == 'QIYMET' %}
+                                        <h4><del>${{product.price|floatformat:2}}</del><span style="font-size: 15px; color: orangered;">-${{ product.discount_amount|floatformat:2 }} off</span></h4>
+                                        <h4><span>$</span>{% discount product.discount_type product.price  product.discount_amount %}</h4>
+                                        {% else %}
+                                        <h4><span>$</span>{{ product.price|floatformat:2 }}</h4>
+                                        {% endif %}
+                                    </div>
+                                    </div>
+                                    {% endfor %}
+                                      
+                                </div>
+                            </div>
+                        </div>
+                        <!-- side-bar single product slider end -->
+                        <!-- side-bar banner start here -->
+                        <div class="collection-sidebar-banner">
+                            <a href="#"><img src="{% static 'assets/images/side-banner.png' %}" class="img-fluid blur-up lazyload" alt=""></a>
+                        </div>
+                        <!-- side-bar banner end here -->
+                    </div>
+                    <div class="collection-content col">
+                        <div class="page-main-content">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="top-banner-wrapper">
+                                        <a href="#"><img src="{% static 'assets/images/mega-menu/2.jpg' %}" class="img-fluid blur-up lazyload" alt=""></a>
+                                        <div class="top-banner-content small-section">
+                                            <h4>fashion</h4>
+                                            <h5>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                            </h5>
+                                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled
+                                                it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release
+                                                of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                                        </div>
+                                    </div>
+                                    <div class="collection-product-wrapper">
+                                        <div class="product-top-filter">
+                                            <div class="row">
+                                                <div class="col-xl-12">
+                                                    <div class="filter-main-btn"><span class="filter-btn btn btn-theme"><i class="fa fa-filter"
+                                                                aria-hidden="true"></i> Filter</span></div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="product-filter-content">
+                                                        <div class="search-count">
+                                                            <h5 id='productcount'></h5>
+                                                        </div>
+                                                        <div class="collection-view">
+                                                            <ul>
+                                                                <li><i class="fa fa-th grid-layout-view"></i></li>
+                                                                <li><i class="fa fa-list-ul list-layout-view"></i></li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="collection-grid-view">
+                                                            <ul>
+                                                                <li><img src="{% static 'assets/images/icon/2.png' %}" alt="" class="product-2-layout-view"></li>
+                                                                <li><img src="{% static 'assets/images/icon/3.png' %}" alt="" class="product-3-layout-view"></li>
+                                                                <li><img src="{% static 'assets/images/icon/4.png' %}" alt="" class="product-4-layout-view"></li>
+                                                                <li><img src="{% static 'assets/images/icon/6.png' %}" alt="" class="product-6-layout-view"></li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="product-page-filter">
+                                                            <select name="ordering" id='sort-list' >
+                                                                <option value="" id="placeholder" disabled selected hidden >Sorting items</option>
+                                                                <option value="-actual_price" id="-actual_price" >High to Low</option>
+                                                                <option value="actual_price" id="actual_price" >Low to High</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="product-wrapper-grid product-load-more">
+                                            <div class="row margin-res" id="products">
+                                                
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="load-more-sec"><a href="javascript:void(0)" class="loadMore">load
+                                                more</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <!-- section End -->
+
+
+    <script>
+        var userId='{{request.user.id}}'
+        var wishlist='{{wishlist}}'
+    </script>
+    <script src="{% static 'assets/js/category_fetch.js' %}"></script>
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+
+
+
+

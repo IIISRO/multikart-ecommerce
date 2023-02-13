@@ -1,0 +1,43 @@
+.red{
+    background-color: rgba(255, 0, 0, 0.719);
+}
+
+.blue{
+   background-color: rgba(0, 0, 255, 0.61);
+}
+
+.white{
+    background-color: rgba(245, 245, 245, 0.76);
+}
+
+.black{
+    background-color: rgb(0, 0, 0);
+ }
+
+.product-modal{
+    width: 900px;
+    height: 500px;
+    box-shadow: 100px 100px 100px 1000px rgba(0, 0, 0, 0.459);
+    position: absolute;
+    display: none;
+    z-index: 100000000000;
+}
+
+.aktiv{
+    border: 2px solid rgba(0, 0, 0, 0.623) !important;
+}
+
+#sizess{
+    display: flex;
+}   
+
+.property-size{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.checked {
+    color: orange;
+  }
+  

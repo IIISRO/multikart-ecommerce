@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% load i18n %}
+
+
+
+
+
+
+
+    <!-- breadcrumb start -->
+    <div class="breadcrumb-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="page-title">
+                        <h2>wishlist</h2>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <nav aria-label="breadcrumb" class="theme-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item active">wishlist</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- breadcrumb End -->
+
+
+    <!--section start-->
+    <section class="wishlist-section section-b-space">
+        <div class="container">
+            <div class="row">
+
+                <div id='items' class="col-sm-12">
+                   
+                </div>
+            </div>
+            <div class="row wishlist-buttons">
+                <div class="col-12">
+                    {% get_current_language as LANGUAGE_CODE %}
+                    {% if LANGUAGE_CODE == 'en' %}
+                    <a href="/" class="btn btn-solid">continue shopping</a>
+                    {% else %}
+                    <a href="/{{LANGUAGE_CODE}}/" class="btn btn-solid">alış verişə davam et</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--section end-->
+    <script>var userId='{{request.user.id}}'</script>
+    <script src="{% static 'assets/js/wish-fetch.js' %}"></script>
+
+
+{% endblock %}

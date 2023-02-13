@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+<title>{% block title%}Register | Multikart{% endblock %}</title>
+
+{% block content %}
+
+
+
+
+
+    <!-- breadcrumb start -->
+    <div class="breadcrumb-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="page-title">
+                        <h2>create account</h2>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <nav aria-label="breadcrumb" class="theme-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">create account</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- breadcrumb End -->
+
+
+    <!--section start-->
+    <section class="register-page section-b-space">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3>create account</h3>
+                    <div class="theme-card">
+                        <form class="theme-form" action="{% url 'accounts:register' %}" method="POST">
+                            {% csrf_token %}
+                            {{ form.non_field_errors }}
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <label for="email">First Name</label>
+                                    {{form.first_name}}
+                                <ul>
+                                    {% for error in form.first_name.errors %}
+                                    <li style="color: red;">{{error}}</li>
+                                    {% endfor %}
+                                </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="review">Last Name</label>
+                                    {{form.last_name}}
+                                    <ul>
+                                        {% for error in form.last_name.errors %}
+                                        <li style="color: red;">{{error}}</li>
+                                        {% endfor %}
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <label for="email">username</label>
+                                    {{form.username}}
+                                    <ul>
+                                        {% for error in form.username.errors %}
+                                        <li style="color: red;">{{error}}</li>
+                                        {% endfor %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email">email</label>
+                                    {{form.email}}
+                                    <ul>
+                                        {% for error in form.email.errors %}
+                                        <li style="color: red;">{{error}}</li>
+                                        {% endfor %}
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <label for="email">password</label>
+                                    {{form.password}}
+                                    <ul>
+                                        {% for error in form.password.errors %}
+                                        <li style="color: red;">{{error}}</li>
+                                        {% endfor %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email">confirm password</label>
+                                    {{form.confirm_password}}
+                                    <ul>
+                                        {% for error in form.confirm_password.errors %}
+                                        <li style="color: red;">{{error}}</li>
+                                        {% endfor %}
+                                </div>
+                                <button type="submit" class="btn btn-solid">create Account</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--Section ends-->
+
+{% endblock %}

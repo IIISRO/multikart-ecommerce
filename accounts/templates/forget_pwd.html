@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+<title>{% block title%}ForgetPWD | Multikart{% endblock %}</title>
+
+{% block content %}
+
+
+
+    <!-- breadcrumb start -->
+    <div class="breadcrumb-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="page-title">
+                        <h2>forget password</h2>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <nav aria-label="breadcrumb" class="theme-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'accounts:login' %}">login</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">forget password</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- breadcrumb End -->
+
+
+    <!--section start-->
+    <section class="pwd-page section-b-space">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3">
+                    <h2>Forget Your Password</h2>
+                    <form class="theme-form" method="POST">
+                        {% csrf_token %}
+                        {% if error %}
+                        <h4 style="color: red; display: flex; align-items: center; justify-content: center; background-color: rgba(255, 0, 0, 0.226); height: 50px;">{{error|upper}}</h4>
+                        {% endif %}
+                        <div class="form-row">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" name="email" placeholder="Enter Your Email"
+                                    required="">
+                            </div><button type="submit" class="btn btn-solid">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--Section ends-->
+
+{% endblock %}

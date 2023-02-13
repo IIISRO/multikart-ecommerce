@@ -1,0 +1,295 @@
+{% extends 'base.html' %}
+{% load static %}
+<title>{% block title%}Profile | Multikart{% endblock %}</title>
+
+{% block content %}
+
+    <!-- breadcrumb start -->
+    <div class="breadcrumb-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="page-title">
+                        <h2>profile</h2>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <nav aria-label="breadcrumb" class="theme-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">profile</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- breadcrumb End -->
+
+
+    <!-- personal deatail section start -->
+    <section class="contact-page register-page">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    {% if backends.associated %}
+                    {% for auth in backends.associated %}
+                    <h3>PERSONAL DETAIL</h3>
+                    <form method="POST" class="theme-form">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label for="name">First Name</label>
+                                <input type="text" disabled hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button" hx-trigger="keyup" hx-target="#button"  name='first_name'  value="{{ user.first_name }}" class="form-control" id="first_name" value="" placeholder="Name" hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button">
+                                {% if first_name_errors %}
+                                <ul>
+                                    {% for error in first_name_errors %}
+                                    <li style=" color:red; " >{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}     
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email">Last Name</label>
+                                <input type="text" disabled hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button" hx-trigger="keyup" hx-target="#button" name='last_name'  value="{{ user.last_name }}" class="form-control" id="last-name" placeholder="Last name" hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button">
+                                {% if last_name_errors %}
+                                <ul>
+                                    {% for error in last_name_errors %}
+                                    <li style=" color:red; " >{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %} 
+                            </div>
+            
+                            <div class="col-md-6">
+                                <label for="review">username</label>
+                                <input type="text" name="username" value="{{ user.username }}" class="form-control" id="username" placeholder="Enter your username" hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button">
+                                {% if username_errors %}
+                                    <ul>
+                                        {% for error in username_errors %}
+                                        <li style=" color:red; " >{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}                                    
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email">Email</label>
+                                <input type="email" disabled name="email" value="{{ user.email }}" class="form-control" id="email" placeholder="Email"  hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button">
+                                {% if email_errors %}
+                                <ul>
+                                    {% for error in email_errors %}
+                                    <li style=" color:red; " >{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}  
+                            </div>
+                        </div>
+                        <div style="margin-top: 80px;" class="row">
+                        <div class="col-sm-12">
+                            <h3>PERSONAL info</h3>
+                                <div class="form-row">
+                                    <div class="col-md-12">
+                                        <label for="name">Address</label>
+                                        <input type="text" name='address'  {% if profile.address %} value="{{ profile.address }}" {% endif %} class="form-control" hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button" id="address-two" placeholder="Address"> 
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="review">Phone number</label>
+                                        <input type="text" name="phone_number" {% if profile.phone_number %} value="{{ profile.phone_number }}" {% endif %} class="form-control" id="phone_number" placeholder="Enter your number" hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button">
+                                        {% if phone_number_errors %}
+                                            <ul>
+                                                {% for error in phone_number_errors %}
+                                                <li style=" color:red; " >{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}                                    
+                                    </div>
+                       
+                                    <div class="col-md-6">
+                                        <label for="name">flat / plot</label>
+                                        <input type="text" name="flat"  {% if profile.flat %} value="{{ profile.flat }}" {% endif %} class="form-control" id="home-ploat" placeholder="Flat" hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="email">Zip Code</label>
+                                        <input type="text"  name="zip"  {% if profile.zip %} value="{{ profile.zip }}" {% endif %} class="form-control" id="zip-code" placeholder="zip-code" hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button">
+                                    </div>
+                                    <div class="col-md-6 select_input">
+                                        <label for="review">Country</label>
+                                        <select hx-post="{% url 'accounts:profile' %}"  hx-target="#button" name='country' class="form-control" size="1">
+                                            <option {% if profile.country %} value="{{profile.country}}" {% endif %}disabled selected hidden>{% if profile.country %} {{ profile.country }} {% endif %} </option>
+                                            <option value=''>----------</option>
+                                            <option value="Azerbaijan">Azerbaijan</option>
+                                            <option value="Turkey">Turkey</option>
+                                            <option value="USA">USA</option>
+                                            <option value="Russia">Russia</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="review">City</label>
+                                        <input type="text" hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button" name="city"  {% if profile.city %} value="{{ profile.city }}" {% endif %} class="form-control" id="city" placeholder="City" >
+                                        {% if city_errors %}
+                                        <ul>
+                                            {% for error in city_errors %}
+                                            <li style=" color:red; " >{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}  
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="review">Region/State</label>
+                                        <input type="text" hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button" name="region"  {% if profile.region %} value="{{ profile.region }}" {% endif %} class="form-control" id="region-state" placeholder="Region/state">
+                                        {% if region_errors %}
+                                        <ul>
+                                            {% for error in region_errors %}
+                                            <li style=" color:red; " >{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}  
+                                    </div>
+                                    <div class="col-md-12">
+                                    <div style="display: flex;">
+                                        <div id="button">
+                                            <a style="position: absolute; background-color: #fd7164; background-image: none; color: white; border-color: #fd7164;"  class="btn btn-sm btn-solid">Save setting</a>
+                                        </div>
+                                        <button  name="save" class="btn btn-sm btn-solid" type="submit">Save setting</button>
+                                        <a href="{% url 'accounts:logout' %}" style="margin-left: 2px;" class="btn btn-sm btn-solid" >logout</a>
+                                    </div>
+                                    </div>
+                                </div>
+                        </div>
+                        </div>
+                    </form>
+                    {% endfor %}  
+                    {% else %}  
+                    <h3>PERSONAL DETAIL</h3>
+                    <form method="POST" class="theme-form">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label for="name">First Name</label>
+                                <input type="text" hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button" hx-trigger="keyup" hx-target="#button"  name='first_name'  value="{{ user.first_name }}" class="form-control" id="first_name" value="" placeholder="Name" hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button">
+                                {% if first_name_errors %}
+                                <ul>
+                                    {% for error in first_name_errors %}
+                                    <li style=" color:red; " >{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}     
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email">Last Name</label>
+                                <input type="text" hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button" hx-trigger="keyup" hx-target="#button" name='last_name'  value="{{ user.last_name }}" class="form-control" id="last-name" placeholder="Last name" hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button">
+                                {% if last_name_errors %}
+                                <ul>
+                                    {% for error in last_name_errors %}
+                                    <li style=" color:red; " >{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %} 
+                            </div>
+            
+                            <div class="col-md-6">
+                                <label for="review">username</label>
+                                <input type="text" name="username" value="{{ user.username }}" class="form-control" id="username" placeholder="Enter your username" hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button">
+                                {% if username_errors %}
+                                    <ul>
+                                        {% for error in username_errors %}
+                                        <li style=" color:red; " >{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}                                    
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email">Email</label>
+                                <input type="email" name="email" value="{{ user.email }}" class="form-control" id="email" placeholder="Email"  hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button">
+                                {% if email_errors %}
+                                <ul>
+                                    {% for error in email_errors %}
+                                    <li style=" color:red; " >{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}  
+                            </div>
+                        </div>
+                        <div style="margin-top: 80px;" class="row">
+                        <div class="col-sm-12">
+                            <h3>PERSONAL info</h3>
+                                <div class="form-row">
+                                    <div class="col-md-12">
+                                        <label for="name">Address</label>
+                                        <input type="text" name='address'  {% if profile.address %} value="{{ profile.address }}" {% endif %} class="form-control" hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button" id="address-two" placeholder="Address"> 
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="review">Phone number</label>
+                                        <input type="text" name="phone_number" {% if profile.phone_number %} value="{{ profile.phone_number }}" {% endif %} class="form-control" id="phone_number" placeholder="Enter your number" hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button">
+                                        {% if phone_number_errors %}
+                                            <ul>
+                                                {% for error in phone_number_errors %}
+                                                <li style=" color:red; " >{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}                                    
+                                    </div>
+                       
+                                    <div class="col-md-6">
+                                        <label for="name">flat / plot</label>
+                                        <input type="text" name="flat"  {% if profile.flat %} value="{{ profile.flat }}" {% endif %} class="form-control" id="home-ploat" placeholder="Flat" hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="email">Zip Code</label>
+                                        <input type="text"  name="zip"  {% if profile.zip %} value="{{ profile.zip }}" {% endif %} class="form-control" id="zip-code" placeholder="zip-code" hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button">
+                                    </div>
+                                    <div class="col-md-6 select_input">
+                                        <label for="review">Country</label>
+                                        <select hx-post="{% url 'accounts:profile' %}"  hx-target="#button" name='country' class="form-control" size="1">
+                                            <option {% if profile.country %} value="{{profile.country}}" {% endif %}disabled selected hidden>{% if profile.country %} {{ profile.country }} {% endif %} </option>
+                                            <option value=''>----------</option>
+                                            <option value="Azerbaijan">Azerbaijan</option>
+                                            <option value="Turkey">Turkey</option>
+                                            <option value="USA">USA</option>
+                                            <option value="Russia">Russia</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="review">City</label>
+                                        <input type="text" hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button" name="city"  {% if profile.city %} value="{{ profile.city }}" {% endif %} class="form-control" id="city" placeholder="City" >
+                                        {% if city_errors %}
+                                        <ul>
+                                            {% for error in city_errors %}
+                                            <li style=" color:red; " >{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}  
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="review">Region/State</label>
+                                        <input type="text" hx-post="{% url 'accounts:profile' %}" hx-trigger="keyup" hx-target="#button" name="region"  {% if profile.region %} value="{{ profile.region }}" {% endif %} class="form-control" id="region-state" placeholder="Region/state">
+                                        {% if region_errors %}
+                                        <ul>
+                                            {% for error in region_errors %}
+                                            <li style=" color:red; " >{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}  
+                                    </div>
+                                    <div class="col-md-12">
+                                    <div style="display: flex;">
+                                        <div id="button">
+                                            <a style="position: absolute; background-color: #fd7164; background-image: none; color: white; border-color: #fd7164;"  class="btn btn-sm btn-solid">Save setting</a>
+                                        </div>
+                                        <button  name="save" class="btn btn-sm btn-solid" type="submit">Save setting</button>
+                                        <a href="{% url 'accounts:logout' %}" style="margin-left: 2px;" class="btn btn-sm btn-solid" >logout</a>
+                                    </div>
+                                    </div>
+                                </div>
+                        </div>
+                        </div>
+                    </form>
+                    {% endif %}   
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+{% endblock %}

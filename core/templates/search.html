@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+{% load static %}
+<title>{% block title%}Search | Multikart{% endblock %}</title>
+
+{% block content %}
+{% load discount_tag %}
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script>
+    $( function() {
+    $( "#tags" ).autocomplete({
+    source:'{% url "core:autosuggestApi" %}'
+    });
+} );
+</script>  
+<style>
+    .ui-menu-item-wrapper{
+    color: black;
+    border: unset;
+}
+    .ui-menu-item-wrapper:after{
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: orangered;
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+    }
+
+    .ui-menu-item-wrapper:hover{
+        background-color: unset;
+        color: black;
+        border: unset;
+    }
+
+    .ui-menu-item-wrapper:hover::after{
+        transform: scaleX(1);
+        transform-origin: bottom left;
+    }
+    .ui-front{
+        display: flex;
+        flex-direction: column;
+    }
+
+</style>
+    <!-- breadcrumb start -->
+    <div class="breadcrumb-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="page-title">
+                        <h2>search</h2>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <nav aria-label="breadcrumb" class="theme-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item active">search</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- breadcrumb End -->
+
+
+    <!--section start-->
+    <section class="authentication-page">
+        <div class="container">
+            <section class="search-block">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6 offset-lg-3">
+                            <form method="GET" action="/search/" class="form-header">
+                                <div class="input-group">
+                                    <input type="text" name="search" id="tags"  class="form-control" aria-label="Amount (to the nearest dollar)"
+                                        placeholder="Search Products......">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-solid" type="submit"> <i class="fa fa-search"></i>Search</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </section>
+    <!-- section end -->
+
+
+    <!-- product section start -->
+   
+    <section class="section-b-space ratio_asos">
+        <div class="container">
+            <div class="row search-product">
+                
+                {% for prod in product %}
+                <div class="col-xl-2 col-md-4 col-sm-6">
+                    <div class="product-box">
+                        <div class="img-wrapper">
+                            <div class="front">
+                                {% if not prod.category.parent_id %}
+                                <a href="{% url 'products:product1' cat_slug=prod.category.slug slug=prod.slug %}">
+                                {% elif not prod.category.parent_id.parent_id %}
+                                <a href="{% url 'products:product2' maincat_slug=prod.category.parent_id.slug cat_slug=prod.category.slug slug=prod.slug %}">
+                                {% elif not prod.category.parent_id.parent_id.parent_id %}
+                                <a href="{% url 'products:product3' mainmaincat_slug=prod.category.parent_id.parent_id.slug maincat_slug=prod.category.parent_id.slug cat_slug=prod.category.slug slug=prod.slug %}">
+                                {% endif %}<img src="{{prod.main_img.url}}" class="img-fluid blur-up lazyload bg-img" alt=""></a>
+                                
+                            </div>
+                            <div class="cart-info cart-wrap">
+                                {% if prod.id in wishlist %}
+                                <button data-action='remove' data-productId={{prod.id}} class="wishlist-al"><i class="fa fa-heart" style="color:orangered;" aria-hidden="true"></i></button>
+                                {% else %}
+                                <button data-action='add' data-productId={{prod.id}} class="wishlist-al"><i class="ti-heart" aria-hidden="true"></i></button>
+                                {% endif %}  
+                            </div>
+                        </div>
+                        <div class="product-detail">
+                            <div class="rating">
+                                {{prod.get_stars|safe}}
+                            </div>
+                                {% if not prod.category.parent_id %}
+                                <a href="{% url 'products:product1' cat_slug=prod.category.slug slug=prod.slug %}">
+                                {% elif not prod.category.parent_id.parent_id %}
+                                <a href="{% url 'products:product2' maincat_slug=prod.category.parent_id.slug cat_slug=prod.category.slug slug=prod.slug %}">
+                                {% elif not prod.category.parent_id.parent_id.parent_id %}
+                                <a href="{% url 'products:product3' mainmaincat_slug=prod.category.parent_id.parent_id.slug maincat_slug=prod.category.parent_id.slug cat_slug=prod.category.slug slug=prod.slug %}">
+                                {% endif %}
+                                <h6>{{prod.title}}</h6>
+                            </a>
+                            {% if prod.discount_type == 'FAIZ' %}
+                            <h4><del>${{prod.price|floatformat:2}}</del><span style="font-size: 15px; color: orangered;">{{ prod.discount_amount|floatformat:2 }}% off</span></h4>
+                            <h4><span>$</span>{% discount prod.discount_type prod.price  prod.discount_amount %}</h4>
+                            {% elif prod.discount_type == 'QIYMET' %}
+                            <h4><del>${{prod.price|floatformat:2}}</del><span style="font-size: 15px; color: orangered;">-${{ prod.discount_amount|floatformat:2 }} off</span></h4>
+                            <h4><span>$</span>{% discount i.discount_type i.price  i.discount_amount %}</h4>
+                            {% else %}
+                            <h4><span>$</span>{{ prod.price|floatformat:2 }}</h4>
+                            {% endif %}
+                            <ul class="color-variant">
+                                {% for i in prod.property.all %}
+                                {% if i.property_id == 2 %}
+                                <li class="{{i.values|lower}}"></li>
+                                {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                            <!-- Quick-view modal popup start-->
+                            <div class="product-modal" name="{{ prod.id }}">
+                                <div class="modal-content quick-view-modal">
+                                    <div class="modal-body">
+                                        <button type="button" onclick="quickviewclose(this)" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span></button>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-xs-12">
+                                                <div class="quick-view-img"><img src="{{prod.main_img.url}}" alt="" class="img-fluid blur-up lazyload"></div>
+                                            </div>
+                                            <div class="col-lg-6 rtl-text">
+                                                <div class="product-right">
+                                                    <h2>{{prod.title}}</h2>
+                                                    {% if prod.discount_type == 'FAIZ' %}
+                                                    <h4><del>${{prod.price|floatformat:2}}</del><span style="font-size: 15px; color: orangered;">{{ prod.discount_amount|floatformat:2 }}% off</span></h4>
+                                                    <h3><span>$</span>{% discount prod.discount_type prod.price  prod.discount_amount %}</h3>
+                                                    {% elif prod.discount_type == 'QIYMET' %}
+                                                    <h4><del>${{prod.price|floatformat:2}}</del><span style="font-size: 15px; color: orangered;">-${{ prod.discount_amount|floatformat:2 }} off</span></h4>
+                                                    <h3><span>$</span>{% discount prod.discount_type prod.price  prod.discount_amount %}</h3>
+                                                    {% else %}
+                                                    <h3><span>$</span>{{ prod.price|floatformat:2 }}</h3>
+                                                    {% endif %}
+                                                    <ul class="color-variant">
+                                                        {% for j in prod.property.all %}
+                                                        {% if j.property_id == 2 %}
+                                                        <li style="cursor:default;" class="{{ j.values }}"></li>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </ul>
+                                                    <div class="border-product">
+                                                        <h6 class="product-title">product details</h6>
+                                                        <p>{{prod.desc}}</p>
+                                                    </div>
+                                                    <div class="product-description border-product">
+                                                        <div class="size-box">
+                                                            <ul>
+                                                                {% for j in prod.property.all %}
+                                                                {% if j.property_id == 5 %}
+                                                                <li class="active"><a href="#">{{j.values}}</a></li>
+                                                            `      {% endif %}
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </div>
+                                                        <h6 class="product-title">quantity</h6>
+                                                        <div class="qty-box">
+                                                            <div class="input-group"><span class="input-group-prepend"><button type="button"
+                                                                        class="btn quantity-left-minus" data-type="minus" data-field=""><i
+                                                                            class="ti-angle-left"></i></button> </span>
+                                                                <input type="text" name="quantity" class="form-control input-number" value="1"> <span class="input-group-prepend"><button type="button"
+                                                                        class="btn quantity-right-plus" data-type="plus" data-field=""><i
+                                                                            class="ti-angle-right"></i></button></span></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="product-buttons"><a href="#"class="btn btn-solid">add to cart</a>             
+                                                        {% if not prod.category.parent_id %}
+                                                        <a class="btn btn-solid" href="{% url 'products:product1' cat_slug=prod.category.slug slug=prod.slug %}">
+                                                        {% elif not prod.category.parent_id.parent_id %}
+                                                        <a class="btn btn-solid" href="{% url 'products:product2' maincat_slug=prod.category.parent_id.slug cat_slug=prod.category.slug slug=prod.slug %}">
+                                                        {% elif not prod.category.parent_id.parent_id.parent_id %}
+                                                        <a class="btn btn-solid" href="{% url 'products:product3' mainmaincat_slug=prod.category.parent_id.parent_id.slug maincat_slug=prod.category.parent_id.slug cat_slug=prod.category.slug slug=prod.slug %}">
+                                                        {% endif %}view detail</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- Quick-view modal popup end-->
+                {% endfor %}
+            </div>
+        </div>
+
+    </section>
+    <!-- product section end -->
+<script>var userId='{{request.user.id}}' </script>
+
+{% endblock %}

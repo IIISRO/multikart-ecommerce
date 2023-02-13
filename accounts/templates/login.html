@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+<title>{% block title%}Login | Multikart{% endblock %}</title>
+
+{% block content %}
+
+
+
+    <!-- breadcrumb start -->
+    <div class="breadcrumb-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="page-title">
+                        <h2>customer's login</h2>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <nav aria-label="breadcrumb" class="theme-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item active">login</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- breadcrumb End -->
+
+
+    <!--section start-->
+    <section class="login-page section-b-space">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h3>Login</h3>
+                    <div class="theme-card">
+                        <form class="theme-form" method="POST" >
+                            {% csrf_token %}
+                            {% if error %}
+                            <h4 style="color: red; display: flex; align-items: center; justify-content: center; background-color: rgba(255, 0, 0, 0.226); height: 50px;">{{error|upper}}</h4>
+                            {% endif %}
+                            <div class="form-group">
+                                <label for="email">email or username</label>
+                                <input name="emailorusername" type="text" class="form-control" placeholder="Email Or Username" required="">
+                            </div>
+                            <div class="form-group">
+                                <label for="review">Password</label>
+                                <input name="password" type="password" class="form-control" id="email" placeholder="Password" required="">
+
+                            </div>
+                            <button type="submit" style="border-right: 1px solid white;"class="btn btn-solid">Login</button><a href="{% url 'accounts:forget-pwd' %}" style="border-left: 1px solid white; "class="btn btn-solid">Forget password</a>
+                        </form>
+                    </div>
+                    <div class="theme-card">
+                        <center>
+                            <h3 style="margin-top: 10px;">login with</h3>
+                            <a href="{% url 'social:begin' 'facebook' %}?next={{ request.GET.next }}"><img width="40px" height="40px" src="{% static 'assets/images/Facebook_Logo_(2019).png' %}" alt=""></a>
+                            <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.GET.next }}"><img width="50px" height="50px" src="{% static 'assets/images/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png' %}" alt=""></a>
+                        </center>
+                    </div>
+                    
+                </div>
+                <div class="col-lg-6 right-login">
+                    <h3>New Customer</h3>
+                    <div class="theme-card authentication-right">
+                        <h6 class="title-font">Create A Account</h6>
+                        <p>Sign up for a free account at our store. Registration is quick and easy. It allows you to be
+                            able to order from our shop. To start shopping click register.</p><a href="{% url 'accounts:register' %}"
+                            class="btn btn-solid">Create an Account</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>      
+    <!--Section ends-->
+
+{% endblock %}

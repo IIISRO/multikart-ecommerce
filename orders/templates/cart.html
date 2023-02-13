@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% load i18n %}
+
+
+
+
+    <!-- breadcrumb start -->
+    <div class="breadcrumb-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="page-title">
+                        <h2>cart</h2>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <nav aria-label="breadcrumb" class="theme-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item active">cart</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- breadcrumb End -->
+
+
+    <!--section start-->
+    <section class="cart-section section-b-space">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div id="items">
+
+                    </div>
+                    <table class="table cart-table table-responsive-md">
+                        <tfoot id="tfoot">
+                            
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="row cart-buttons">
+                    {% get_current_language as LANGUAGE_CODE %}
+                    {% if LANGUAGE_CODE == 'en' %}
+                    <div class="col-6"><a href="/" class="btn btn-solid">continue shopping</a></div>
+                    <div id='checkout' class="col-6"><a href="{% url 'orders:checkout' %}" class="btn btn-solid">check out</a></div>
+                    {% else %}
+                    <div class="col-6"><a href="/az/" class="btn btn-solid">alış verişə davam et</a></div>
+                    <div id='checkout' class="col-6"><a href="{% url 'orders:checkout' %}" class="btn btn-solid">ödəniş</a></div>
+                    {% endif %}
+                    
+                </div>
+            </form>
+        </div>
+    </section>
+    <!--section end-->
+
+<script>
+
+function main(){
+
+async function Products(api_url='/api/cart') {
+    const response = await fetch(api_url, {
+        method: 'GET', // *GET, POST, PUT, DELETE, etc.
+    });
+    
+    return response.json(); // parses JSON response into native JavaScript objects
+}
+
+Products('/api/cart')
+.then((data) => {
+    if(data.length>0){
+        document.getElementById('items').innerHTML=
+`           
+<table class="table cart-table table-responsive-xs">
+                        <thead>
+                            <tr class="table-head">
+                                <th scope="col">image</th>
+                                <th scope="col">product name</th>
+                                <th scope="col">price</th>
+                                <th scope="col">quantity</th>
+                                <th scope="col">property</th>
+                                <th scope="col">total</th>
+                                <th scope="col">action</th>
+                            </tr>
+                        </thead>
+
+                        ${
+            (function products() {
+              
+              var products=[]
+                for(i in data){
+                    
+                    products.push(
+                        `
+              
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <a href="${data[i].product.url}"><img src="${data[i].product.main_img}" alt=""></a>
+                                </td>
+                                <td>
+                                    <a href="${data[i].product.url}">${data[i].product.title}</a>
+                                    
+                                </td>
+                                <td>
+                                    <h2>$${data[i].product.actual_price}</h2>
+                                </td>
+                                <td>
+                                    <div class="qty-box">
+                                        <div class="input-group">
+                                            <input  data-action='update' data-size=${data[i].property[1].values} data-color=${data[i].property[0].values} data-productId=${data[i].product.id} type="number" name="quantity" class="quantity form-control input-number" min="1" value="${data[i].quantity}">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    ${
+                                    (function property() {
+                                        propet=[]
+                                        for(j in data[i].property){
+                                            propet.push(data[i].property[j].values.toUpperCase())
+                                        }
+                                        return propet
+                                    })()}
+                                    
+                                </td>
+                                <td>
+                                    <h2 class="td-color">$${data[i].total_price}</h2>
+                                </td>
+                                <td><button style="background-color: white ;border: none;" data-action='remove' data-size=${data[i].property[1].values} data-color=${data[i].property[0].values} data-productId=${data[i].product.id} class="remove-cart icon"><i class="ti-close"></i></button></td>
+                            </tr>
+                        </tbody>
+                    `
+                    )
+                }
+                return products
+            })()
+        }
+
+
+                        
+    </table>
+
+
+`
+
+
+
+
+
+    var cart_total_price=0;
+    for(var i = 0; i<data.length;i++ ){
+        cart_total_price+=data[i].total_price
+        console.log(data[i].total_price)
+    }
+    document.getElementById('tfoot').innerHTML=`
+                                <tr>
+                                <td>total price :</td>
+                                <td>
+                                    <h2>$${cart_total_price.toFixed(2)}</h2>
+                                </td>
+                            </tr>`
+
+
+var removeCartBtn=document.getElementsByClassName('remove-cart')
+for(var i = 0; i<removeCartBtn.length;i++){
+    removeCartBtn[i].addEventListener('click', function(){
+        var productId = this.dataset.productid;
+        var action = this.dataset.action;
+        var color = this.dataset.color;
+        var size = this.dataset.size;
+        var quantity = 0;
+        removeWishList(productId,action,size,color,quantity)
+    })
+
+}
+
+var quant=document.getElementsByClassName('quantity')
+for(var i = 0; i<quant.length;i++){
+    quant[i].addEventListener('change', function(){
+            var productId = this.dataset.productid;
+            var action = this.dataset.action;
+            var color = this.dataset.color;
+            var size = this.dataset.size;
+            var quantity = this.value;
+            removeWishList(productId,action,size,color,quantity)
+        })
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var userId='{{request.user.id}}'
+function removeWishList(productId,action,size,color,quantity) {
+    var url = '/orders/add-cart/'
+    fetch(url,{
+        method:"POST",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Accept": "application/json",
+            'Content-Type': 'application/json'
+          },
+        body:JSON.stringify({'productId':productId,
+                             'action':action,
+                             'userId':userId,
+                             'size':size,
+                             'color':color,
+                             'quantity':quantity
+              
+                            })
+    })
+    .then((response)=>{
+        return response.json()
+    })
+    .then((data)=>{
+        console.log(data)
+        main()
+    })
+}
+
+}else{
+document.getElementById('items').innerHTML="<h1>You don't have any items</h1>"
+document.getElementById('tfoot').innerHTML=''
+document.getElementById('checkout').innerHTML='<button disabled style="cursor:default; background-color: #ff4c3b; color: white;padding: 15px;" class="btn btn-solid">check out</button>'
+}
+});
+
+}
+
+        
+main()
+
+
+</script>
+{% endblock %}

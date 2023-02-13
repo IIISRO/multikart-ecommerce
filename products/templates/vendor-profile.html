@@ -1,0 +1,393 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load discount_tag %}
+<title>{% block title%}{{vendor.name}} | Multikart{% endblock %}</title>
+
+{% block content %}
+
+
+<!-- vendor cover start -->
+<div class="vendor-cover">
+    <div>
+        <img src="{{ vendor.vendor_banner.url }}" alt="" class="bg-img lazyload blur-up">
+    </div>
+</div>
+<!-- vendor cover end -->
+
+
+<!-- section start -->
+<section class="vendor-profile pt-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="profile-left">
+                    <div class="profile-image">
+                        <div>
+                            <img src="{{ vendor.vendor_img.url }}" alt="" class="img-fluid">
+                            <h3>{{ vendor.name }}</h3>
+                            <div class="rating">
+                                {{vendor.get_stars|safe}}
+                                <h6>{{reviews|length}} review</h6>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-detail">
+                        <div>
+                            <p>{{ vendor.vendor_desc }}</p>
+                          
+                        </div>
+                    </div>
+                    <div class="vendor-contact">
+                        <div>
+                            <h6>follow us:</h6>
+                            <div class="footer-social">
+                                <ul>
+                                    {% if vendor.fb %}
+                                    <li><a href="{{ vendor.fb }}"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                                    {% endif %}
+                                    {% if vendor.gp  %}
+                                    <li><a href="{{ vendor.gp }}"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
+                                    {% endif %}
+                                    {% if vendor.tw %}
+                                    <li><a href="{{ vendor.tw }}"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                                    {% endif %}
+                                    {% if vendor.ig %}
+                                    <li><a href="{{ vendor.ig }}"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            <h6>if you have any query:</h6>
+                            <a href="#" class="btn btn-solid btn-sm">contact seller</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- Section ends -->
+
+
+<!-- collection section start -->
+<section class="section-b-space">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3 collection-filter">
+                <!-- side-bar colleps block stat -->
+                <div class="collection-filter-block">
+                    <!-- brand filter start -->
+                    <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left"
+                                aria-hidden="true"></i> back</span></div>
+                    <div class="collection-collapse-block open">
+                        <h3 class="collapse-block-title">vendor category</h3>
+                        <div class="collection-collapse-block-content">
+                            <div class="collection-brand-filter">
+                                {% for i in vendor_categories %}
+                                <div style="margin-top: 15px;" >
+                                    <input type="checkbox"  class="asa" style="width: 20px;" id="{{i}}" name="categories"  onchange='  '>
+                                    <label >{{i|upper}}</label>
+                                </div>
+                                {% endfor %}
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <!-- color filter start here -->
+                    <div class="collection-collapse-block open">
+                        <h3 class="collapse-block-title">colors</h3>
+                        <div class="collection-collapse-block-content">
+                            <div class="color-selector">
+                                <ul>
+                                    {% for k, v in vendor_colors.items %}
+                                    <li class="{{v}}" name="color" onclick="location = colorselect(this)" id="{{k}}"></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- price filter start here -->
+                    <div class="collection-collapse-block border-0 open">
+                        <h3 class="collapse-block-title">price</h3>
+                        <div class="collection-collapse-block-content">
+                            <div class="collection-brand-filter">
+                                <div class="custom-control custom-checkbox collection-filter-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="hundred">
+                                    <label class="custom-control-label" for="hundred">$10 - $100</label>
+                                </div>
+                                <div class="custom-control custom-checkbox collection-filter-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="twohundred">
+                                    <label class="custom-control-label" for="twohundred">$100 - $200</label>
+                                </div>
+                                <div class="custom-control custom-checkbox collection-filter-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="threehundred">
+                                    <label class="custom-control-label" for="threehundred">$200 - $300</label>
+                                </div>
+                                <div class="custom-control custom-checkbox collection-filter-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="fourhundred">
+                                    <label class="custom-control-label" for="fourhundred">$300 - $400</label>
+                                </div>
+                                <div class="custom-control custom-checkbox collection-filter-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="fourhundredabove">
+                                    <label class="custom-control-label" for="fourhundredabove">$400 above</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="collection-sidebar-banner">
+                    <a href="/"><img src="{% static 'assets/images/side-banner.png' %}" class="img-fluid blur-up lazyload"
+                            alt=""></a>
+                </div>
+                <!-- silde-bar colleps block end here -->
+            </div>
+            <div class="col">
+                <div class="collection-wrapper">
+                    <div class="collection-content ratio_asos">
+                        <div class="page-main-content">
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="filter-main-btn"><span class="filter-btn btn btn-theme"><i
+                                                class="fa fa-filter" aria-hidden="true"></i> Filter</span></div>
+                                </div>
+                            </div>
+                            <div class="collection-product-wrapper">
+                                <div class="product-top-filter">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="product-filter-content">
+                                                <div class="search-count">
+                                                    <h5>Showing Products {{page_obj.start_index}} of {{paginator.num_pages}}</h5>
+                                                </div>
+                                                <div class="collection-view">
+                                                    <ul>
+                                                        <li><i class="fa fa-th grid-layout-view"></i></li>
+                                                        <li><i class="fa fa-list-ul list-layout-view"></i></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="collection-grid-view">
+                                                    <ul>
+                                                        <li><img src="{% static 'assets/images/icon/2.png' %}" alt=""
+                                                                class="product-2-layout-view"></li>
+                                                        <li><img src="{% static 'assets/images/icon/3.png' %}" alt=""
+                                                                class="product-3-layout-view"></li>
+                                                        <li><img src="{% static 'assets/images/icon/4.png' %}" alt=""
+                                                                class="product-4-layout-view"></li>
+                                                        <li><img src="{% static 'assets/images/icon/6.png' %}" alt=""
+                                                                class="product-6-layout-view"></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="product-page-filter">
+                                                    <select name="ordering" id='sort-list' onchange="location = sortingurl()" >
+                                                        <option value="" id="placeholder" disabled selected hidden >Sorting items</option>
+                                                        <option value="-price" id="-price" >High to Low</option>
+                                                        <option value="price" id="price" >Low to High</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-wrapper-grid">
+                                    <div class="row">
+                                        {% for i in prod %}
+                                        <div class="col-xl-3 col-md-6 col-grid-box">
+                                            <div class="product-box">
+                                                <div class="img-wrapper">
+                                                    <div class="front">
+                                                        {% if not i.category.parent_id %}
+                                                        <a href="{% url 'products:product1' cat_slug=i.category.slug slug=i.slug %}">
+                                                        {% elif not i.category.parent_id.parent_id %}
+                                                        <a href="{% url 'products:product2' maincat_slug=i.category.parent_id.slug cat_slug=i.category.slug slug=i.slug %}">
+                                                        {% elif not i.category.parent_id.parent_id.parent_id %}
+                                                        <a href="{% url 'products:product3' mainmaincat_slug=i.category.parent_id.parent_id.slug maincat_slug=i.category.parent_id.slug cat_slug=i.category.slug slug=i.slug %}">
+                                                        {% endif %}
+
+
+                                                            <img src="{{i.main_img.url}}" class="img-fluid blur-up lazyload bg-img" alt=""></a>
+                                                    </div>
+                                                    <div class="cart-info cart-wrap">
+                                                         <a href="javascript:void(0)" title="Add to Wishlist"><i
+                                                                class="ti-heart" aria-hidden="true"></i></a>   </div>
+                                                </div>
+                                                <div class="product-detail">
+                                                    <div>
+                                                        <div class="rating">
+                                                            {{i.get_stars|safe}}
+                                                        </div>
+                                                            {% if not i.category.parent_id %}
+                                                            <a href="{% url 'products:product1' cat_slug=i.category.slug slug=i.slug %}">
+                                                            {% elif not i.category.parent_id.parent_id %}
+                                                            <a href="{% url 'products:product2' maincat_slug=i.category.parent_id.slug cat_slug=i.category.slug slug=i.slug %}">
+                                                            {% elif not i.category.parent_id.parent_id.parent_id %}
+                                                            <a href="{% url 'products:product3' mainmaincat_slug=i.category.parent_id.parent_id.slug maincat_slug=i.category.parent_id.slug cat_slug=i.category.slug slug=i.slug %}">
+                                                            {% endif %}
+                                                            <h6>{{ i.title }}</h6>
+                                                        </a>
+                                                        {% if i.discount_type == 'FAIZ' %}
+                                                        <h4><del>${{i.price|floatformat:2}}</del><span style="font-size: 15px; color: orangered;">{{ i.discount_amount|floatformat:2 }}% off</span></h4>
+                                                        <h4><span>$</span>{% discount i.discount_type i.price  i.discount_amount %}</h4>
+                                                        {% elif i.discount_type == 'QIYMET' %}
+                                                        <h4><del>${{i.price|floatformat:2}}</del><span style="font-size: 15px; color: orangered;">-${{ i.discount_amount|floatformat:2 }} off</span></h4>
+                                                        <h4><span>$</span>{% discount i.discount_type i.price  i.discount_amount %}</h4>
+                                                        {% else %}
+                                                        <h4><span>$</span>{{ i.price|floatformat:2 }}</h4>
+                                                        {% endif %}
+                                                        <ul class="color-variant">
+                                                            {% for j in i.property.all %}
+                                                            {% if j.property_id == 2 %}
+                                                            <li style="cursor:default;" class="{{ j.values }}"></li>
+                                                            {% endif %}
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                             
+                                {% if is_paginated %}
+                                <div class="product-pagination mb-0">
+                                    <div class="theme-paggination-block">
+                                        <div class="row">
+                                            <div class="col-xl-6 col-md-6 col-sm-12">
+                                                <nav aria-label="Page navigation">
+                                                    <ul class="pagination">
+                                                        {% if page_obj.has_previous %}
+                                                        <li class="page-item"><a class="page-link" name="page" onclick="location = paginationurl1()"  href="#"
+                                                                aria-label="Previous"><span aria-hidden="true"><i
+                                                                        class="fa fa-chevron-left"
+                                                                        aria-hidden="true"></i></span> <span
+                                                                    class="sr-only"  id="prvs">{{page_obj.previous_page_number}}</span></a>
+                                                        </li>
+                                                        {% endif %}
+                                                        {% for page in paginator.page_range %}
+                                                        {% if page_obj.number == page %}
+                                                        <li class="page-item active"><a class="page-link" href="#">{{ page }}</a></li>
+                                                        {% else %}
+                                                        <li class="page-item"><a class="page-link" onclick="location = paginationurl2()" name="page" id="btn" href="#">{{ page }}</a></li>
+                                                        {% endif %}
+                                                        
+                                                        {% endfor %}
+                                                        
+                                                        {% if page_obj.has_next %}
+                                                        <li class="page-item"><a class="page-link" onclick="location = paginationurl3()" name="page" href="#"
+                                                                aria-label="Next"><span aria-hidden="true"><i
+                                                                        class="fa fa-chevron-right"
+                                                                        aria-hidden="true"></i></span> <span
+                                                                    class="sr-only" id="nxt" >{{page_obj.next_page_number}}</span></a>
+                                                        </li>
+                                                        {% endif %}
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                            <div class="col-xl-6 col-md-6 col-sm-12">
+                                                <div class="product-search-count-bottom">
+                                                    <h5>Showing Products {{page_obj.start_index}} of {{paginator.num_pages}}</h5>
+                                                    
+                    
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+<!-- collection section end -->
+<script>
+    function get(name) {
+    if (name = (new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)')).exec(location.search))  //location.search give query sling part
+      return decodeURIComponent(name[1]);
+  }
+
+    if(get('ordering'))
+    document.getElementById('placeholder').innerHTML = "Sort: " + document.getElementById(get('ordering')).innerHTML;
+
+
+
+
+    function sortingurl(){
+        var url = new URL(window.location.href);
+        var search_params = url.searchParams;
+        search_params.set('ordering', document.getElementById('sort-list').value);
+        url.search = search_params.toString();
+        var new_url = url.toString();
+        return new_url
+    }
+
+    
+    function paginationurl1(){
+        var url = new URL(window.location.href);
+        var search_params = url.searchParams;
+        search_params.set('page', document.getElementById('prvs').innerText);
+        url.search = search_params.toString();
+        var new_url = url.toString();
+        return new_url
+    }
+
+    function paginationurl2(){
+        var url = new URL(window.location.href);
+        var search_params = url.searchParams;
+        search_params.set('page', document.getElementById('btn').innerText);
+        url.search = search_params.toString();
+        var new_url = url.toString();
+        return new_url
+    }
+    function paginationurl3(){
+        var url = new URL(window.location.href);
+        var search_params = url.searchParams;
+        search_params.set('page', document.getElementById('nxt').innerText);
+        url.search = search_params.toString();
+        var new_url = url.toString();
+        return new_url
+    }
+
+    function colorselect(color){
+        if (color.checked){
+            return 0
+        }
+        else{
+        var url = new URL(window.location.href);
+        var search_params = url.searchParams;
+        search_params.set('color', color.getAttribute('id'));
+        url.search = search_params.toString();
+        var new_url = url.toString();
+        color.checked=true
+        return new_url 
+        }
+    }
+
+    function categoryselect(cat){
+        var url = new URL(window.location.href);
+        var search_params = url.searchParams;
+        search_params.set('categories','l');
+        url.search = search_params.toString();
+        var new_url = url.toString();
+        return new_url
+    }
+
+
+
+
+</script>
+
+
+{% endblock %}
+
+
+
+
+
+
+
